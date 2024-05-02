@@ -1,0 +1,65 @@
+
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split 
+from sklearn.feature_extraction.text import CountVectorizer 
+from sklearn.naive bayes import MultinomialNB 
+from sklearn.metries import accuracy_score, classification_report
+
+ # Sample dataset with labeled documents (positive or negative) 
+Data = pd.read_csv('companyfeedback.csv")
+
+ # List of polarity words
+positive_words = ["good", "happy", "excellent", "awesome", "amazing"] 
+negative_words = ["bad", "sad", "terrible", "awful", "disappointing"]
+ 
+# Function to classify documents based on polarity words.
+def  classify_document(document):
+pos_count =  sum(1 for word in document.split() if word in 
+positive_words)
+ neg count = sum(1 for word in document.split() if word in 
+negative_words) 
+if pos_count > neg_count: 
+return 'positive' 
+elif neg_count> pos_count: 
+return 'negative'
+ else:
+return 'neutral'
+
+# Apply classification to the dataset 
+data['predicted_sentiment'] =  data['Comments"].apply(classify_document)
+
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test  = 
+train_test_split(data['Comments'], data['Category'], test_size=0.2, random_state=42)
+
+# Create a CountVectorizer to convert text data to numerical features 
+vectorizer = CountVectorizer()
+X_train_counts = vectorizer.fit_transform(X_train)
+X_test_counts = vectorizer.transform(X_test)
+
+#Train a Multinomial Naive Bayes classifier
+Classifier = Multinomial NB()
+classifier.fit(X_train_counts, y_train)
+
+MultinomialNB()
+
+# Predict document sentiment
+y_pred = classifier.predict(X_test_counts)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred) 
+
+C:\Users\Samruddhi\AppData\Local\Programs\Python\Python311\Lib\sitepackages\sklearn\metrics\_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior. _warn_prf(average, modifier, msg_start, len(result)) 
+C:\Users\Samruddhi\AppData\Local\Programs\Python\Python311\Lib\sitepackages\sklearn\metrics\_classification.py:1344: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior. _warn_prf(average, modifier, msg_start, len(result)) 
+C:\Users\Samruddhi\AppData\Local\Programs\Python\Python311\Lib\sitepackages\sklearn\metrics\_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior. _warn_prf(average, modifier, msg_start, len(result)) 
+C:\Users\Samruddhi\AppData\Local\Programs\Python\Python311\Lib\sitepackages\sklearn\metrics\_classification.py:1344: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior. _warn_prf(average, modifier, msg_start, len(result)) 
+C:\Users\Samruddhi\AppData\Local\Programs\Python\Python311\Lib\sitepackages\sklearn\metrics\_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior. _warn_prf(average, modifier, msg_start, len(result)) 
+C:\Users\Samruddhi\AppData\Local\Programs\Python\Python311\Lib\sitepackages\sklearn\metrics\_classification.py:1344: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior. _warn_prf(average, modifier, msg_start, len(result))
+
+
+print(f'Accuracy: (accuracy:.2f)
+print('Classification Report:\n', report)
