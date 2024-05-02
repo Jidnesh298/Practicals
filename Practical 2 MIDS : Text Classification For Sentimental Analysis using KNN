@@ -1,0 +1,82 @@
+
+import pandas as pd
+from sklearn.model_selection import train_test_split 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score,
+classification_report,confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from sklearn import preprocessing
+
+#Download NLTK resource
+nltk.download('stopwords')
+nltk.download('punkt’)
+nltk.download('wordnet’)
+
+True
+
+#Load the dataset
+df = pd.read_csv('IMDB Dataset.csv')
+#Preprocess text data
+stop_words = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
+
+1
+
+ 
+def preprocess_text(text):
+# Tokenize text
+tokens = word_tokenize(text)
+# Remove stop words
+tokens = [word for word in tokens if word.lower() not in stop_words]
+# Lemmatize words
+tokens = [lemmatizer.lemmatize(word.lower()) for word in tokens]
+return ' '.join(tokens)
+df['review'] = df['review'].apply(preprocess_text)
+# Encode sentiment labels
+le = preprocessing.LabelEncoder()
+df['sentiment'] = le.fit_transform(df['sentiment'])
+
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test =
+train_test_split(df['review'],df['sentiment'], test_size=0.2,
+random_state=42)
+# Vectorize text data using TF-IDF
+vectorizer = TfidfVectorizer(max_features=5000)
+X_train_bow = vectorizer.fit_transform(X_train)
+X_test_bow = vectorizer.transform(X_test)
+# Train KNN classifier
+clf = KNeighborsClassifier(n_neighbors=5)
+clf.fit(X_train_bow, y_train)
+
+
+KNeighborsClassifier()
+
+
+
+
+#Evaluate the classifier
+y_pred = clf.predict(X_test_bow)
+accuracy = accuracy_score(y_test, y_pred)
+print(“Accuracy:”, accuracy)
+print(“\nCassification Report:”)
+print(classification_report(y_test, y_pred))
+
+
+# Visualize confusion matrix
+conf_matrix = confusion_matrix(y_train, clf.predict(X_train_bow))
+sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues")
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix')
+plt.show()
+
+
+
+ 
